@@ -11,9 +11,9 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
+  access_token: string;
   user: {
-    id: number;
+    id: string;
     name: string;
     email: string;
   };
@@ -24,12 +24,15 @@ const authService = {
   /**
    * Login with email and password
    */
-  login: async (data: LoginRequest): Promise<LoginResponse> => {
+  login: async (data: LoginRequest): Promise<{ token: string; user: LoginResponse['user'] }> => {
     const response = await apiClient.post<LoginResponse>(
       ENDPOINTS.AUTH.LOGIN,
       data,
     );
-    return response.data;
+    return {
+      token: response.data.access_token,
+      user: response.data.user,
+    };
   },
 };
 

@@ -11,7 +11,7 @@ const STORAGE_KEYS = {
 };
 
 export interface StoredUser {
-  id: number;
+  id: string;
   name: string;
   email: string;
 }

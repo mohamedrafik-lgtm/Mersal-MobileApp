@@ -32,7 +32,7 @@ const EmailInput: React.FC<EmailInputProps> = ({
         <TextInput
           style={styles.input}
           placeholder="example@email.com"
-          placeholderTextColor="rgba(255, 255, 255, 0.45)"
+          placeholderTextColor={Colors.textMuted}
           value={value}
           onChangeText={onChangeText}
           keyboardType="email-address"
@@ -55,23 +55,23 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: Fonts.sizes.md,
     fontWeight: Fonts.weights.medium,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: Colors.textSecondary,
     textAlign: 'right',
     marginBottom: Spacing.sm,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: Colors.backgroundSecondary,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.35)',
+    borderColor: Colors.border,
     borderRadius: Spacing.borderRadius.lg,
     paddingHorizontal: Spacing.base,
     height: 54,
   },
   inputError: {
-    borderColor: '#FF6B6B',
-    backgroundColor: 'rgba(255, 107, 107, 0.15)',
+    borderColor: Colors.error,
+    backgroundColor: Colors.errorLight,
   },
   inputIcon: {
     fontSize: 18,
@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: Fonts.sizes.base,
-    color: Colors.textLight,
+    color: Colors.textPrimary,
     textAlign: 'right',
     paddingVertical: 0,
   },
   errorText: {
     fontSize: Fonts.sizes.sm,
-    color: '#FF6B6B',
+    color: Colors.error,
     textAlign: 'right',
     marginTop: Spacing.xs,
   },

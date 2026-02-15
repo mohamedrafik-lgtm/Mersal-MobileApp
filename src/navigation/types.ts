@@ -4,7 +4,13 @@
 
 export type RootStackParamList = {
   Login: undefined;
-  Home: undefined;
-  // TODO: Add more screens as we build them
-  // Campaign: { id: string };
+  Main: undefined;
+};
+
+export type MainTabParamList = {
+  Dashboard: undefined;
+  Campaigns: undefined;
+  Channels: undefined;
+  Contacts: undefined;
+  Account: undefined;
 };

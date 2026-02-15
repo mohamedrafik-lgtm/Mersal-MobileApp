@@ -36,17 +36,12 @@ const LoginButton: React.FC<LoginButtonProps> = ({ onPress, isLoading }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     borderRadius: Spacing.borderRadius.lg,
     height: 54,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: Spacing.xl,
-    shadowColor: Colors.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
   },
   buttonDisabled: {
     opacity: 0.6,

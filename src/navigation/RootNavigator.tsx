@@ -1,13 +1,13 @@
 /**
  * Root Navigator
- * Switches between Auth stack and Main stack based on auth state
+ * Switches between Auth stack and Main tab navigator based on auth state
  */
 
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../context';
 import LoginScreen from '../screens/LoginScreen';
-import HomeScreen from '../screens/HomeScreen';
+import MainNavigator from './MainTabNavigator';
 import SplashScreen from '../screens/SplashScreen';
 import type { RootStackParamList } from './types';
 
@@ -29,7 +29,7 @@ const RootNavigator: React.FC = () => {
       }}
     >
       {isAuthenticated ? (
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Main" component={MainNavigator} />
       ) : (
         <Stack.Screen
           name="Login"

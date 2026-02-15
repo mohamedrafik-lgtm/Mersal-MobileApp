@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: Fonts.sizes.sm,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: Colors.textMuted,
   },
 });
 

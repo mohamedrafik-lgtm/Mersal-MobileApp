@@ -1,50 +1,52 @@
 /**
  * Morasel App Color Palette
- * WhatsApp-inspired green theme
+ * Dark theme matching the web dashboard
  */
 
 const Colors = {
-  // Primary - WhatsApp Green
-  primary: '#075E54',
-  primaryDark: '#054C44',
-  primaryLight: '#128C7E',
+  // Primary - Green accent
+  primary: '#25D366',
+  primaryDark: '#1EBE5A',
+  primaryLight: '#34E879',
 
-  // Secondary / Accent
-  accent: '#25D366',
-  accentLight: '#DCF8C6',
-
-  // Background
-  background: '#FFFFFF',
-  backgroundSecondary: '#F0F2F5',
-  backgroundDark: '#ECE5DD',
+  // Background - Dark tones
+  background: '#0F1B24',
+  backgroundSecondary: '#0A1218',
+  backgroundCard: '#162B34',
+  backgroundElevated: '#1C3340',
 
   // Text
-  textPrimary: '#1A1A1A',
-  textSecondary: '#667781',
+  textPrimary: '#FFFFFF',
+  textSecondary: '#8A9BA8',
   textLight: '#FFFFFF',
-  textPlaceholder: '#A0A0A0',
+  textMuted: '#5A6F7D',
+  textPlaceholder: '#4A5D6A',
+
+  // Accent
+  accent: '#25D366',
+  accentLight: '#25D36620',
 
   // Status
-  error: '#DC3545',
-  errorLight: '#FFF0F0',
+  error: '#EF4444',
+  errorLight: '#EF444420',
   success: '#25D366',
-  warning: '#FFC107',
+  warning: '#F59E0B',
 
   // Borders & Dividers
-  border: '#E0E0E0',
-  borderLight: '#F0F0F0',
-  divider: '#E8E8E8',
+  border: '#1E3A47',
+  borderLight: '#243D4A',
+  divider: '#1E3A47',
 
   // Shadows
   shadow: '#000000',
 
   // Input
-  inputBackground: '#F7F8FA',
-  inputBorder: '#DFE1E5',
-  inputFocusBorder: '#075E54',
+  inputBackground: '#162B34',
+  inputBorder: '#1E3A47',
+  inputFocusBorder: '#25D366',
 
   // Transparent
-  overlay: 'rgba(0, 0, 0, 0.5)',
+  overlay: 'rgba(0, 0, 0, 0.65)',
   transparent: 'transparent',
 };
 

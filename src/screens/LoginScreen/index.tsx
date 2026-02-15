@@ -72,7 +72,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: _navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={Colors.primaryDark} barStyle="light-content" />
+      <StatusBar backgroundColor={Colors.backgroundSecondary} barStyle="light-content" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -126,7 +126,7 @@ const LoginScreen: React.FC<Props> = ({ navigation: _navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.backgroundSecondary,
   },
   keyboardView: {
     flex: 1,
@@ -138,28 +138,23 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.xxl,
   },
   formCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: Colors.backgroundCard,
     borderRadius: Spacing.borderRadius.xl,
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.xxl,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    shadowColor: Colors.shadow,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.1,
-    shadowRadius: 16,
-    elevation: 10,
+    borderColor: Colors.border,
   },
   formTitle: {
     fontSize: Fonts.sizes.xxl,
     fontWeight: Fonts.weights.bold,
-    color: Colors.textLight,
+    color: Colors.textPrimary,
     textAlign: 'right',
     marginBottom: Spacing.xs,
   },
   formSubtitle: {
     fontSize: Fonts.sizes.md,
-    color: 'rgba(255, 255, 255, 0.75)',
+    color: Colors.textSecondary,
     textAlign: 'right',
     marginBottom: Spacing.xl,
   },

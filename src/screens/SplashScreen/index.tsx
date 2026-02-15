@@ -26,7 +26,7 @@ const SplashScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.backgroundSecondary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -34,22 +34,22 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: Colors.primary + '30',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: Colors.primary + '60',
     marginBottom: Spacing.base,
   },
   logoText: {
     fontSize: 40,
     fontWeight: Fonts.weights.bold,
-    color: Colors.textLight,
+    color: Colors.primary,
   },
   appName: {
     fontSize: Fonts.sizes.xxxl,
     fontWeight: Fonts.weights.bold,
-    color: Colors.textLight,
+    color: Colors.textPrimary,
     marginBottom: Spacing.xxl,
   },
   loader: {
