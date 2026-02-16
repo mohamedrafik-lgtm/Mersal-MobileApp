@@ -35,13 +35,40 @@ import { dashboardService } from '../../services';
 import type { Channel, CreateChannelResponse } from '../../services';
 import TopBar from '../../components/TopBar';
 
-// ─── QR Renderer (uses SVG lib or Image fallback) ────────
+// ─── Helpers ─────────────────────────────────────────────
+
+/**
+ * Detect whether the qrCode value from the API is already a rendered
+ * image (base64 / data-URI) or a raw pairing string that needs to be
+ * encoded into a QR on the client.
+ */
+const isBase64Image = (value: string): boolean => {
+  // data:image/...;base64,...
+  if (value.startsWith('data:image')) { return true; }
+  // Plain base64 blob (PNG magic bytes start with iVBOR, JPEG with /9j)
+  if (/^[A-Za-z0-9+/\n]{200,}={0,2}$/.test(value.replace(/\s/g, ''))) { return true; }
+  return false;
+};
+
+// ─── QR Renderer ─────────────────────────────────────────
 
 const QRRenderer: React.FC<{ value: string; size: number }> = ({ value, size }) => {
   const [useFallback, setUseFallback] = useState(!QRCode);
 
+  // Case 1: API returned a ready-made QR image (base64 / data-URI)
+  if (isBase64Image(value)) {
+    const uri = value.startsWith('data:') ? value : `data:image/png;base64,${value}`;
+    return (
+      <Image
+        source={{ uri }}
+        style={{ width: size, height: size, borderRadius: 8 }}
+        resizeMode="contain"
+      />
+    );
+  }
+
+  // Case 2: Raw pairing string → generate QR on the client
   if (useFallback || !QRCode) {
-    // Fallback: use a QR code generation API via Image
     const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(value)}`;
     return (
       <Image
@@ -249,7 +276,7 @@ const ChannelSetupModal: React.FC<ChannelSetupModalProps> = ({
   };
 
   const isConnected = channelData?.status === 'connected' || channelData?.status === 'open';
-  const qrValue = channelData?.qrCode || channelData?.id || '';
+  const qrValue = channelData?.qrCode || '';
 
   // ── Render Form Step ──
   const renderFormStep = () => (
