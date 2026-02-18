@@ -10,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import CampaignsScreen from '../screens/CampaignsScreen';
 import ChannelsScreen from '../screens/ChannelsScreen';
 import ContactsScreen from '../screens/ContactsScreen';
+import PointsScreen from '../screens/PointsScreen';
 import AccountScreen from '../screens/AccountScreen';
 
 // Context so any screen can open the drawer & know current screen
@@ -26,6 +27,7 @@ const SCREENS: Record<string, React.FC> = {
   Campaigns: CampaignsScreen,
   Channels: ChannelsScreen,
   Contacts: ContactsScreen,
+  Points: PointsScreen,
   Account: AccountScreen,
 };
 

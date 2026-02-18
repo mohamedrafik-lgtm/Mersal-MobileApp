@@ -20,6 +20,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -28,6 +29,9 @@ import { useAuth } from '../../context';
 import { dashboardService } from '../../services';
 import { DrawerContext } from '../../navigation';
 import type { DashboardStats, ChartDataItem, Channel } from '../../services';
+
+// Logo
+const Logo = require('../../logo/logo.png');
 
 // ─── Stat Card ───────────────────────────────────────────
 interface StatCardProps {
@@ -128,7 +132,7 @@ const HomeScreen: React.FC = () => {
           <TouchableOpacity onPress={openDrawer} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
             <Icon name="menu" size={26} color={Colors.textPrimary} />
           </TouchableOpacity>
-          <Text style={styles.topBarTitle}>لوحة التحكم</Text>
+          <Image source={Logo} style={styles.topBarLogo} resizeMode="contain" />
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Colors.primary} />
@@ -146,7 +150,7 @@ const HomeScreen: React.FC = () => {
         <TouchableOpacity onPress={openDrawer} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
           <Icon name="menu" size={26} color={Colors.textPrimary} />
         </TouchableOpacity>
-        <Text style={styles.topBarTitle}>لوحة التحكم</Text>
+        <Image source={Logo} style={styles.topBarLogo} resizeMode="contain" />
       </View>
 
       <ScrollView
@@ -380,6 +384,10 @@ const styles = StyleSheet.create({
     fontWeight: Fonts.weights.bold,
     color: Colors.textLight,
     textAlign: 'right',
+  },
+  topBarLogo: {
+    width: 120,
+    height: 36,
   },
   scroll: {
     padding: Spacing.base,

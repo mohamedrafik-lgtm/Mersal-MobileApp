@@ -7,6 +7,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../context';
 import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 import MainNavigator from './MainTabNavigator';
 import SplashScreen from '../screens/SplashScreen';
 import type { RootStackParamList } from './types';
@@ -31,11 +32,17 @@ const RootNavigator: React.FC = () => {
       {isAuthenticated ? (
         <Stack.Screen name="Main" component={MainNavigator} />
       ) : (
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ animationTypeForReplace: 'pop' }}
-        />
+        <>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ animationTypeForReplace: 'pop' }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+          />
+        </>
       )}
     </Stack.Navigator>
   );

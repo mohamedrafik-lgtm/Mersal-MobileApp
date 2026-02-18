@@ -1,9 +1,9 @@
 /**
- * Login Screen
+ * Register Screen
  * Morasel - WhatsApp Campaign Automation
  *
- * This screen only orchestrates components and delegates
- * business logic to the useLogin hook (Single Responsibility).
+ * This screen orchestrates components and delegates
+ * business logic to the useRegister hook (Single Responsibility).
  */
 
 import React, { useRef, useEffect } from 'react';
@@ -20,37 +20,43 @@ import {
   I18nManager,
 } from 'react-native';
 import { Colors, Fonts, Spacing } from '../../theme';
-import { useLogin } from '../../hooks';
-import {
-  LoginHeader,
-  EmailInput,
-  PasswordInput,
-  LoginButton,
-  LoginFooter,
-} from '../../components/LoginScreen';
+import { useRegister } from '../../hooks';
+import { LoginHeader, LoginFooter } from '../../components/LoginScreen';
+import { EmailInput, PasswordInput } from '../../components/LoginScreen';
+import { NameInput, PhoneInput, RegisterButton } from '../../components/RegisterScreen';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../navigation/types';
 
 // Enable RTL for Arabic
 I18nManager.allowRTL(true);
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
-const LoginScreen: React.FC<Props> = ({ navigation }) => {
+const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const {
+    name,
     email,
+    phone,
     password,
     isLoading,
     showPassword,
+    nameError,
     emailError,
+    phoneError,
     passwordError,
+    emailInputRef,
+    phoneInputRef,
     passwordInputRef,
+    handleNameChange,
     handleEmailChange,
+    handlePhoneChange,
     handlePasswordChange,
     toggleShowPassword,
-    handleLogin,
+    handleRegister,
+    focusEmailInput,
+    focusPhoneInput,
     focusPasswordInput,
-  } = useLogin();
+  } = useRegister();
 
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -87,19 +93,36 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           {/* Header: Logo + App Name (on green bg) */}
           <LoginHeader fadeAnim={fadeAnim} slideAnim={slideAnim} />
 
-          {/* Form Card (white card) */}
+          {/* Form Card */}
           <Animated.View style={[styles.formCard, { opacity: fadeAnim }]}>
-            <Text style={styles.formTitle}>تسجيل الدخول</Text>
+            <Text style={styles.formTitle}>إنشاء حساب جديد</Text>
             <Text style={styles.formSubtitle}>
-              أدخل بياناتك للوصول إلى حسابك
+              أنشئ حسابك للبدء في إدارة حملاتك على واتساب
             </Text>
+
+            <NameInput
+              value={name}
+              onChangeText={handleNameChange}
+              error={nameError}
+              editable={!isLoading}
+              onSubmitEditing={focusEmailInput}
+            />
 
             <EmailInput
               value={email}
               onChangeText={handleEmailChange}
               error={emailError}
               editable={!isLoading}
+              onSubmitEditing={focusPhoneInput}
+            />
+
+            <PhoneInput
+              value={phone}
+              onChangeText={handlePhoneChange}
+              error={phoneError}
+              editable={!isLoading}
               onSubmitEditing={focusPasswordInput}
+              inputRef={phoneInputRef}
             />
 
             <PasswordInput
@@ -109,22 +132,22 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
               editable={!isLoading}
               showPassword={showPassword}
               onToggleShowPassword={toggleShowPassword}
-              onSubmitEditing={handleLogin}
+              onSubmitEditing={handleRegister}
               inputRef={passwordInputRef}
             />
 
-            <LoginButton onPress={handleLogin} isLoading={isLoading} />
+            <RegisterButton onPress={handleRegister} isLoading={isLoading} />
 
-            {/* Link to Register */}
+            {/* Link to Login */}
             <View style={styles.linkRow}>
-              <Text style={styles.linkText}>ليس لديك حساب؟ </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.linkAction}>إنشاء حساب</Text>
+              <Text style={styles.linkText}>لديك حساب بالفعل؟ </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.linkAction}>تسجيل الدخول</Text>
               </TouchableOpacity>
             </View>
           </Animated.View>
 
-          {/* Footer (on green bg) */}
+          {/* Footer */}
           <LoginFooter />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -184,4 +207,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

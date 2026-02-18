@@ -20,9 +20,11 @@ import {
   Platform,
   ScrollView,
   Switch,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { launchImageLibrary, type Asset } from 'react-native-image-picker';
 import { Colors, Fonts, Spacing } from '../../theme';
 import { campaignService, dashboardService } from '../../services';
 import type { Campaign, CreateCampaignRequest, Contact, Channel } from '../../services';
@@ -161,7 +163,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ visible, onCl
   const [delayBetweenMessages, setDelayBetweenMessages] = useState('30');
   const [batchSize, setBatchSize] = useState('10');
   const [batchDelay, setBatchDelay] = useState('180');
-  const [sendImageFirst, setSendImageFirst] = useState(true);
+  const [selectedImage, setSelectedImage] = useState<Asset | null>(null);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
 
   // Data
@@ -190,7 +192,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ visible, onCl
         setDelayBetweenMessages('30');
         setBatchSize('10');
         setBatchDelay('180');
-        setSendImageFirst(true);
+        setSelectedImage(null);
         setSelectedContacts([]);
         setError('');
         setChannelPickerOpen(false);
@@ -261,7 +263,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ visible, onCl
         delayBetweenMessages: parseInt(delayBetweenMessages, 10) || 30,
         batchSize: parseInt(batchSize, 10) || 10,
         batchDelay: parseInt(batchDelay, 10) || 180,
-        sendImageFirst,
+        sendImageFirst: !!selectedImage,
         contactIds: selectedContacts,
       };
 
@@ -269,7 +271,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ visible, onCl
         console.log('[CreateCampaign] payload:', JSON.stringify(payload));
       }
 
-      await campaignService.createCampaign(payload);
+      await campaignService.createCampaign(payload, selectedImage || undefined);
       onDone();
       onClose();
     } catch (err: any) {
@@ -424,16 +426,61 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ visible, onCl
             {/* Advanced Settings Section */}
             <Text style={formStyles.sectionTitle}>إعدادات متقدمة</Text>
 
-            {/* Send Image First */}
-            <View style={formStyles.switchRow}>
-              <Switch
-                value={sendImageFirst}
-                onValueChange={setSendImageFirst}
-                trackColor={{ false: Colors.border, true: Colors.primary + '60' }}
-                thumbColor={sendImageFirst ? Colors.primary : Colors.textMuted}
-              />
-              <Text style={formStyles.switchLabel}>إرسال الصورة أولاً</Text>
-            </View>
+            {/* Image Picker */}
+            <Text style={formStyles.label}>صورة الحملة (اختياري)</Text>
+            {selectedImage ? (
+              <View style={formStyles.imagePreviewContainer}>
+                <Image
+                  source={{ uri: selectedImage.uri }}
+                  style={formStyles.imagePreview}
+                  resizeMode="cover"
+                />
+                <View style={formStyles.imageActions}>
+                  <TouchableOpacity
+                    style={formStyles.imageChangeBtn}
+                    onPress={() => {
+                      launchImageLibrary(
+                        { mediaType: 'photo', quality: 0.8, maxWidth: 1200, maxHeight: 1200 },
+                        (response) => {
+                          if (!response.didCancel && !response.errorCode && response.assets?.[0]) {
+                            setSelectedImage(response.assets[0]);
+                          }
+                        },
+                      );
+                    }}
+                  >
+                    <Icon name="image-edit-outline" size={16} color={Colors.primary} />
+                    <Text style={formStyles.imageChangeBtnText}>تغيير</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={formStyles.imageRemoveBtn}
+                    onPress={() => setSelectedImage(null)}
+                  >
+                    <Icon name="trash-can-outline" size={16} color={Colors.error} />
+                    <Text style={formStyles.imageRemoveBtnText}>إزالة</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={formStyles.imagePickerBtn}
+                onPress={() => {
+                  launchImageLibrary(
+                    { mediaType: 'photo', quality: 0.8, maxWidth: 1200, maxHeight: 1200 },
+                    (response) => {
+                      if (!response.didCancel && !response.errorCode && response.assets?.[0]) {
+                        setSelectedImage(response.assets[0]);
+                      }
+                    },
+                  );
+                }}
+                activeOpacity={0.7}
+              >
+                <Icon name="image-plus" size={32} color={Colors.textMuted} />
+                <Text style={formStyles.imagePickerText}>اضغط لاختيار صورة</Text>
+                <Text style={formStyles.imagePickerHint}>PNG, JPG حتى 5 ميجابايت</Text>
+              </TouchableOpacity>
+            )}
 
             {/* Protection */}
             <View style={formStyles.switchRow}>
@@ -1326,6 +1373,73 @@ const formStyles = StyleSheet.create({
     color: Colors.error,
     flex: 1,
     textAlign: 'right',
+  },
+  imagePickerBtn: {
+    backgroundColor: Colors.inputBackground,
+    borderWidth: 1.5,
+    borderColor: Colors.inputBorder,
+    borderStyle: 'dashed',
+    borderRadius: Spacing.borderRadius.md,
+    paddingVertical: Spacing.xxl,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xs,
+  },
+  imagePickerText: {
+    fontSize: Fonts.sizes.base,
+    fontWeight: Fonts.weights.medium,
+    color: Colors.textSecondary,
+    marginTop: Spacing.sm,
+  },
+  imagePickerHint: {
+    fontSize: Fonts.sizes.xs,
+    color: Colors.textMuted,
+  },
+  imagePreviewContainer: {
+    borderRadius: Spacing.borderRadius.md,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: Colors.inputBorder,
+    backgroundColor: Colors.inputBackground,
+  },
+  imagePreview: {
+    width: '100%',
+    height: 180,
+    borderRadius: Spacing.borderRadius.md,
+  },
+  imageActions: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'center',
+    gap: Spacing.lg,
+    paddingVertical: Spacing.md,
+  },
+  imageChangeBtn: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    gap: Spacing.xs,
+    paddingHorizontal: Spacing.base,
+    paddingVertical: Spacing.sm,
+    borderRadius: Spacing.borderRadius.md,
+    backgroundColor: Colors.primary + '15',
+  },
+  imageChangeBtnText: {
+    fontSize: Fonts.sizes.sm,
+    fontWeight: Fonts.weights.medium,
+    color: Colors.primary,
+  },
+  imageRemoveBtn: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    gap: Spacing.xs,
+    paddingHorizontal: Spacing.base,
+    paddingVertical: Spacing.sm,
+    borderRadius: Spacing.borderRadius.md,
+    backgroundColor: Colors.error + '15',
+  },
+  imageRemoveBtnText: {
+    fontSize: Fonts.sizes.sm,
+    fontWeight: Fonts.weights.medium,
+    color: Colors.error,
   },
   submitBtn: {
     flexDirection: 'row',

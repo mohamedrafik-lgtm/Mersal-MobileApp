@@ -5,6 +5,7 @@
 
 import { ENDPOINTS } from '../config';
 import apiClient from './apiClient';
+import type { Asset } from 'react-native-image-picker';
 
 // ─── Types ───────────────────────────────────────────────
 
@@ -68,13 +69,42 @@ const campaignService = {
   },
 
   /**
-   * Create a new campaign
+   * Create a new campaign (with optional image)
    */
-  createCampaign: async (data: CreateCampaignRequest): Promise<Campaign> => {
+  createCampaign: async (data: CreateCampaignRequest, image?: Asset): Promise<Campaign> => {
     if (__DEV__) {
-      console.log('[createCampaign] sending:', JSON.stringify(data));
+      console.log('[createCampaign] sending:', JSON.stringify(data), 'hasImage:', !!image);
     }
-    const response = await apiClient.post(ENDPOINTS.CAMPAIGNS.LIST, data);
+
+    let response;
+
+    if (image && image.uri) {
+      // Send as multipart/form-data when image is attached
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('message', data.message);
+      formData.append('channelId', data.channelId);
+      formData.append('protectionEnabled', String(data.protectionEnabled));
+      formData.append('protectionType', data.protectionType);
+      formData.append('delayBetweenMessages', String(data.delayBetweenMessages));
+      formData.append('batchSize', String(data.batchSize));
+      formData.append('batchDelay', String(data.batchDelay));
+      formData.append('sendImageFirst', String(data.sendImageFirst));
+      data.contactIds.forEach(id => formData.append('contactIds[]', id));
+      formData.append('image', {
+        uri: image.uri,
+        type: image.type || 'image/jpeg',
+        name: image.fileName || 'campaign_image.jpg',
+      } as any);
+
+      response = await apiClient.post(ENDPOINTS.CAMPAIGNS.LIST, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    } else {
+      // Send as JSON when no image
+      response = await apiClient.post(ENDPOINTS.CAMPAIGNS.LIST, data);
+    }
+
     const result = response.data?.data || response.data;
     if (__DEV__) {
       console.log('[createCampaign] result:', JSON.stringify(result));
